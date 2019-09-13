@@ -1,0 +1,51 @@
+<%= form_with(model: order, local: true) do |form| %>
+  <% if order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :customer %>
+    <%= form.text_field :customer %>
+  </div>
+
+  <div class="details">
+    <!-- #order-detailsの下に追加するように指定 -->
+    <%= link_to_add_association '行を追加', form, :order_details, id: 'add-link',
+      data: {
+        association_insertion_node: '#order-details',
+        association_insertion_method: 'append'
+      } %>
+  <table>
+    <thead>
+      <tr>
+        <th>品名</th>
+        <th>数量</th>
+        <th>単価</th>
+      </tr>
+    </thead>
+    <tbody id="order-details">
+      <%= form.fields_for :order_details do |detail| %>
+        <%= render 'order_detail_fields', f: detail %>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
